@@ -1,0 +1,30 @@
+name: Build Android APK
+
+on:
+workflow_dispatch:
+push:
+branches: [main]
+
+jobs:
+build:
+runs-on: ubuntu-latest
+steps:
+- name: Get source
+uses: actions/checkout@v4
+
+  - name: Set up Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
+
+  - name: Build APK
+    uses: docker://ghcr.io/kivy/buildozer:latest
+    with:
+      args: buildozer android debug
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: Bos-APK
+      path: bin/*.apk
